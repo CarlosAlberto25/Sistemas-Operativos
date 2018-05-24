@@ -1,0 +1,106 @@
+ package Socket;
+
+import java.awt.BorderLayout;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+
+public class Servidor {
+
+	  public static void main(String[] args) {	
+	    	
+			MarcoServidor mimarco=new MarcoServidor();
+				
+			mimarco.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			
+			}//metodo main	
+		    
+		    }//clase servidor
+
+/*************************************************************************************/       
+		    class MarcoServidor extends JFrame implements Runnable {
+			
+			public MarcoServidor(){
+				
+			setBounds(600,300,280,350);				
+					
+			JPanel milamina= new JPanel();
+				
+			milamina.setLayout(new BorderLayout());
+				
+			areatexto=new JTextArea();
+				
+			milamina.add(areatexto,BorderLayout.CENTER);
+				
+			add(milamina);
+				
+			setVisible(true);
+				
+			
+			//hilo
+			Thread mihilo= new Thread(this);	
+			mihilo.start();
+			
+			}
+			
+			private	JTextArea areatexto;
+/*************************************************************************************************************/		
+		//Empieza la clase Servidor
+			@Override
+			public void run() {
+				
+			//System.out.println("Estoy a la escucha");
+			
+				
+			try {		
+			//abrimos una conexion de servidor con el puerto
+			ServerSocket servidor= new	ServerSocket(9999);
+				
+			while(true){
+			
+			//hacepta la solicitud	
+		    Socket misocket=servidor.accept();
+				
+		   //LEE lo que viene en el flujo de datos 
+		    DataInputStream flujo_entrada= new DataInputStream(misocket.getInputStream());
+		         
+		    //se almacena en una variable de tipo String en el area de texto y se cierra la conexion
+		    String mensaje_texto=flujo_entrada.readUTF();
+/*****************************************************************************************************/       
+		    /*En Esta Parte Empiesan las Operaciones Del Dato Resivido
+		    Como aqui aparece que mensaje_texto es una cadena de caracteres No podia hacer una comparacion 
+		    de divicion con la cadena*Es Por eso Que converti la cadena En entero*/ 
+		    
+		    //Para La Sumatoria
+		    int Sumatoria;
+		    //De cadena A entero
+		    Sumatoria=Integer.parseInt(mensaje_texto);
+		     
+		
+		    int Numero4=0;                               //SUMATORIA DE N NUMERO ASTA N 
+		    
+		    if(Sumatoria>0){
+		    		
+		    for(int i=1; i<=Sumatoria; i++){
+		    		
+		    Numero4=Numero4+i;				  		
+		    }//for
+		  
+		    areatexto.append("\nLa sumatoria de " +Sumatoria + " es : "+Numero4);    
+		    }
+		  
+		    misocket.close();
+		    
+			}
+		
+			} catch (IOException e) {
+			// TODO Auto-generated catch block
+			   e.printStackTrace();
+			}//cathc		
+			}	
+            }//MarcoServidor
