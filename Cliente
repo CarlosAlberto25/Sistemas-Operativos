@@ -1,0 +1,113 @@
+ package Socket;
+import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+public class Cliente {
+
+/**************************************************************************************************/	
+	public static void main(String[] args) {
+		
+	MarcoCliente mimarco=new MarcoCliente();
+		
+	mimarco.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+    }
+/**************************************************************************************************/
+    class MarcoCliente extends JFrame{
+	
+	public MarcoCliente(){
+		
+	setBounds(300,300,280,350);
+				
+	LaminaMarcoCliente milamina=new LaminaMarcoCliente();
+		
+	add(milamina);
+		
+	setVisible(true);
+	}	
+    }
+/****************************************************************************************************/
+    class LaminaMarcoCliente extends JPanel{
+    	
+	private static final Object JTextField = null;
+
+	public LaminaMarcoCliente(){
+	
+	//mensajes
+	JLabel texto=new JLabel("CLIENTE:");
+	add(texto);
+		
+    JLabel Dato=new JLabel("\n Ingresa Un Dato");	
+	add(Dato);
+	
+	//BARRA Para ingresar los datos de un tamaño de 20
+     campo1= new  JTextField(20);
+
+	add(campo1);		
+	
+	miboton=new JButton("Enviar");	
+	EnviaTexto mievento= new EnviaTexto();
+	
+	
+	//Boton a la escucha se presiona para que se cree el socket
+	miboton.addActionListener(mievento);
+		
+	add(miboton);		
+	}
+	
+/******************************************************************************************/	
+	//Empiesa la clase Cliente
+	private class EnviaTexto implements ActionListener{
+		
+	
+	//Metodo	
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+			
+					
+    //System.out.println("Hola Funciona");
+	 
+    //A qui es para escribir en el cuadro de texto
+	//System.out.println(campo1.getText());
+			
+	
+	/*Construccion de socket*/	
+	try {                       //Direccion ip/Puerto
+	Socket misocket = new Socket("192.168.1.71",9999);
+	
+	//Por aqui van a circular por el socket
+	DataOutputStream flujo_salida= new DataOutputStream(misocket.getOutputStream());
+						
+	//Aqui es por donde viajan los flujos de datos hacia el servidor		
+	flujo_salida.writeUTF(campo1.getText());
+	//Cierre del flujo
+	flujo_salida.close();
+					
+	} catch (UnknownHostException e) {
+	// TODO Auto-generated catch block
+	e.printStackTrace();
+	} catch (IOException e) {
+	// TODO Auto-generated catch block
+	System.out.println(e.getMessage());
+	}//fin del ultimo catch	
+			
+	}//metodo
+			
+	}//clase
+/****************************************************************************************************************/	
+	private JTextField campo1;
+	
+	private JButton miboton;	
+	
+    }//LaminaDelMarco
